@@ -42,50 +42,18 @@ provider "aws" {
 }
 
 
-#============ VPC =============
-# Note that when a VPC is created, a main route table it created by default
-# that is responsible for enabling the flow of network traffic within the VPC
-
-resource "aws_vpc" "lcchua-tf-vpc1" {
-  cidr_block = "10.0.0.0/16"
-  enable_dns_support = true
-  enable_dns_hostnames = true
-
-  tags = {
-    group = var.stack_name
-    Name  = "stw-vpc"
-  }
-}
-output "vpc-id" {
-  description = "1 stw vpc"
-  value       = aws_vpc.lcchua-tf-vpc1.id
-}
-
-
 #============ SECURITY GROUP =============
 
 resource "aws_security_group" "lcchua-tf-sg-allow-ssh" {
   name   = "lcchua-tf-sg-allow-ssh"
-  vpc_id = aws_vpc.lcchua-tf-vpc1.id
+  vpc_id = "vpc-0444ca4b865539c2d"
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description = "allow ssh port"
+    cidr_blocks = ["116.86.159.189/32","18.206.107.24/29"]
   }
 
   egress {
